@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { insertSong } from "@/lib/db";
-import { sessionToken } from "@/lib/session";
+import { isAuthenticated } from "@/lib/session";
 
 export async function POST(req: Request) {
-  const basicAuth = await sessionToken();
-  if (!basicAuth) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

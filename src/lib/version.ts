@@ -1,8 +1,8 @@
 /**
- * App version — mirrored with package.json. Shown as a mono "v1.10.0" tag
- * hugging the brand. Bump here and in package.json on release.
+ * App version — read from the nearest git tag at build time (set in
+ * next.config.ts). Shown as a mono "v1.0.0" tag hugging the brand.
  */
-export const APP_VERSION = "1.10.0";
+export const APP_VERSION = process.env.APP_VERSION ?? "dev";
 
 export const APP_NAME = "JIGAR";
 

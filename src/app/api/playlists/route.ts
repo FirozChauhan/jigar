@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server";
 import { listPlaylists } from "@/lib/db";
-import { sessionToken } from "@/lib/session";
+import { isAuthenticated } from "@/lib/session";
 
 export async function GET() {
-  const basicAuth = await sessionToken();
-  if (!basicAuth) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const playlists = await listPlaylists();
     const res = NextResponse.json(playlists);
-    res.headers.set(
-      "Cache-Control",
-      "public, max-age=60, s-maxage=300, stale-while-revalidate=300",
-    );
+    res.headers.set("Cache-Control", "private, no-store");
     return res;
   } catch (err) {
     console.error("listPlaylists failed:", err);

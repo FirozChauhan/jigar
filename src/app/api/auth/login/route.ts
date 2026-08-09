@@ -6,6 +6,38 @@ const SESSION_COOKIE = "jigar_token";
 const AUTH_MARKER = "jigar_auth";
 const MAX_AGE = 60 * 60 * 24 * 30;
 
+/* In-memory brute-force throttle: 5 failed attempts per IP per 15 minutes. */
+const RATE_WINDOW_MS = 15 * 60 * 1000;
+const MAX_ATTEMPTS = 5;
+const attempts = new Map<string, { count: number; resetAt: number }>();
+
+function clientIp(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0]?.trim() ?? "unknown";
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
+
+function isRateLimited(key: string): { limited: boolean; retryAfter: number } {
+  const now = Date.now();
+  const rec = attempts.get(key);
+  if (!rec || now > rec.resetAt) {
+    attempts.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return { limited: false, retryAfter: 0 };
+  }
+  rec.count += 1;
+  if (rec.count > MAX_ATTEMPTS) {
+    return {
+      limited: true,
+      retryAfter: Math.ceil((rec.resetAt - now) / 1000),
+    };
+  }
+  return { limited: false, retryAfter: 0 };
+}
+
+function clearRateLimit(key: string) {
+  attempts.delete(key);
+}
+
 export async function POST(req: Request) {
   let username = "";
   let password = "";
@@ -24,6 +56,15 @@ export async function POST(req: Request) {
     );
   }
 
+  const key = `${clientIp(req)}|${username.toLowerCase()}`;
+  const { limited, retryAfter } = isRateLimited(key);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many attempts. Try again later." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
+    );
+  }
+
   // Verify credentials against the `users` table (scrypt-hashed).
   const valid = await verifyUser(username, password);
   if (!valid) {
@@ -32,9 +73,10 @@ export async function POST(req: Request) {
       { status: 401 },
     );
   }
+  clearRateLimit(key);
 
-  // Signed session marker; the token no longer represents a backend Basic
-  // credential — it is just an opaque session id.
+  // Session cookie carries the Basic-style credentials; it is re-verified on
+  // every protected request (see src/lib/session.ts).
   const basicAuth = Buffer.from(`${username}:${password}`).toString("base64");
 
   const jar = await cookies();

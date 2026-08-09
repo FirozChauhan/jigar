@@ -48,11 +48,19 @@ export function TrackList({ tracks }: { tracks: Track[] }) {
         const active = song?.id === track.id;
         return (
           <li key={track.id} className="panel">
-            <button
-              type="button"
-              onClick={() => play(track, tracks)}
-              className={`group relative flex w-full items-center gap-3 border bg-[#171717] p-3 text-left transition-colors duration-200 hover:bg-[#141414] active:bg-[#171717] ${active ? "border-blue-500" : "border-line"}`}
+            <div
+              role="button"
+              tabIndex={0}
               aria-label={`Play ${track.title}`}
+              onClick={() => play(track, tracks)}
+              onKeyDown={(e) => {
+                if (e.target !== e.currentTarget) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  play(track, tracks);
+                }
+              }}
+              className={`group relative flex w-full cursor-pointer items-center gap-3 border bg-[#171717] p-3 text-left transition-colors duration-200 hover:bg-[#141414] focus-visible:ring-blue-500 active:bg-[#171717] ${active ? "border-blue-500" : "border-line"}`}
             >
               <span
                 className="diagonal-grid pointer-events-none absolute inset-0 opacity-40"
@@ -106,7 +114,7 @@ export function TrackList({ tracks }: { tracks: Track[] }) {
                   </p>
                 )}
               </div>
-            </button>
+            </div>
           </li>
         );
       })}

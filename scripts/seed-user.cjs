@@ -47,7 +47,7 @@ function ask(prompt) {
   const pool = new Pool({
     connectionString,
     ssl: connectionString.includes("sslmode=require")
-      ? { rejectUnauthorized: false }
+      ? { rejectUnauthorized: process.env.ALLOW_SELF_SIGNED_DB_SSL !== "true" }
       : false,
   });
 

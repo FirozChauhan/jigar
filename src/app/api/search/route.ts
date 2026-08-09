@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { searchSongs } from "@/lib/db";
-import { sessionToken } from "@/lib/session";
+import { isAuthenticated } from "@/lib/session";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q")?.trim();
   if (!q) return NextResponse.json([]);
 
-  const basicAuth = await sessionToken();
-  if (!basicAuth) {
+  if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

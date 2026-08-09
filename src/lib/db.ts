@@ -12,11 +12,12 @@ const scrypt = promisify(scryptCallback) as (
 
 const connectionString = process.env.DATABASE_URL ?? "";
 
+const needsSsl = connectionString.includes("sslmode=require");
+const rejectUnauthorized = process.env.ALLOW_SELF_SIGNED_DB_SSL !== "true";
+
 export const pool = new Pool({
   connectionString,
-  ssl: connectionString.includes("sslmode=require")
-    ? { rejectUnauthorized: false }
-    : false,
+  ssl: needsSsl ? { rejectUnauthorized } : false,
 });
 
 function rowToTrack(row: QueryResultRow): Track {
