@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/session";
 import { uploadToR2 } from "@/lib/r2";
@@ -78,8 +77,15 @@ export async function POST(req: Request) {
     (req.headers.get("content-type") ?? "").split(";")[0]?.trim() ||
     (folder === "Audio" ? AUDIO_MIME[ext] : IMAGE_MIME[ext]);
 
-  // Content-address style key: folder/timestamp-random.ext — never overwritten.
-  const key = `${folder}/${Date.now()}-${randomBytes(6).toString("hex")}.${ext}`;
+  // Keep the uploaded file's own name, sanitized for a safe object key
+  // (no path separators or hidden-dot tricks). Re-uploading the same name
+  // overwrites that object.
+  const safeName = filename
+    .replace(/[\\/]/g, "-")
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/^\.+/, "")
+    .trim();
+  const key = `${folder}/${safeName}`;
 
   try {
     const url = await uploadToR2({
