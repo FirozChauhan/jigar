@@ -15,6 +15,20 @@ function packageVersion(): string {
 }
 
 function gitVersion(): string {
+  // During production builds, pull the latest remote tags so deployments pick
+  // up release tags automatically (no manual tag push needed — see
+  // push.followTags). Ignored when offline or in shallow checkouts.
+  if (process.env.NODE_ENV === "production") {
+    try {
+      execSync("git fetch --tags --force", {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+        timeout: 15000,
+      });
+    } catch {
+      // offline / not a git repo — rely on local tags or the package fallback
+    }
+  }
   try {
     const tag = execSync("git describe --tags --abbrev=0", {
       encoding: "utf8",
