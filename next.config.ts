@@ -1,5 +1,18 @@
 import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import type { NextConfig } from "next";
+
+function packageVersion(): string {
+  try {
+    const pkg = JSON.parse(
+      readFileSync(path.join(process.cwd(), "package.json"), "utf8"),
+    ) as { version?: string };
+    return pkg.version ?? "dev";
+  } catch {
+    return "dev";
+  }
+}
 
 function gitVersion(): string {
   try {
@@ -7,10 +20,11 @@ function gitVersion(): string {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();
-    return tag.replace(/^v/, "");
+    if (tag) return tag.replace(/^v/, "");
   } catch {
-    return "dev";
+    // no tags in this clone (e.g. shallow CI checkout) — fall through
   }
+  return packageVersion();
 }
 
 const nextConfig: NextConfig = {
@@ -23,8 +37,10 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
-      `img-src 'self' data: blob:${r2 ? ` ${r2}` : ""}`,
-      `media-src 'self' blob:${r2 ? ` ${r2}` : ""}`,
+      // https: is allowed for img/media so covers + audio load even when the
+      // R2 domain env var is missing on the deployment host.
+      `img-src 'self' data: blob: https:${r2 ? ` ${r2}` : ""}`,
+      `media-src 'self' blob: https:${r2 ? ` ${r2}` : ""}`,
       `connect-src 'self'${r2 ? ` ${r2}` : ""}`,
       "font-src 'self' data:",
       "object-src 'none'",
