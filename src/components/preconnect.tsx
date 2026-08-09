@@ -1,9 +1,10 @@
 "use client";
 
+// Opens a warm connection to the CDN (covers + audio) on mount.
 import { useEffect } from "react";
 import { R2_CDN } from "@/lib/version";
 
-/** Warms the Cloudflare R2 connection (covers + audio) once mounted. */
+/** Adds preconnect + dns-prefetch links for the media CDN, once. */
 export function Preconnect() {
   useEffect(() => {
     if (!R2_CDN || document.head.querySelector('[data-r2e="1"]')) return;

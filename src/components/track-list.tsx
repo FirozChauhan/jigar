@@ -1,5 +1,6 @@
 "use client";
 
+// One row per track: click anywhere to play, click an artist to search.
 import { useRouter } from "next/navigation";
 import { usePlayer } from "@/providers/player-provider";
 import type { Track } from "@/lib/types";

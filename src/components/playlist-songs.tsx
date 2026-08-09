@@ -1,5 +1,6 @@
 "use client";
 
+// Playlist view: sidebar + track list for one playlist.
 import { useAuth } from "@/providers/auth-provider";
 import { useBackendData } from "@/lib/use-backend-data";
 import type { Track } from "@/lib/types";

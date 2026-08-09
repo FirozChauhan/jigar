@@ -1,4 +1,7 @@
 import "server-only";
+// S3-compatible client for uploading media to Cloudflare R2. Credentials are
+// read from env (R2_*), and objects are cached as immutable for a year since
+// files are never rewritten.
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const ACCOUNT_ID = process.env.R2_ACCOUNT_ID ?? "";

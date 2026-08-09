@@ -1,5 +1,7 @@
 "use client";
 
+// Auth context: exposes login/logout and a marker-cookie check so the shell
+// can switch between the login screen and the app.
 import {
   createContext,
   useCallback,
@@ -38,8 +40,8 @@ export function AuthProvider({
 
   useEffect(() => {
     const id = window.setTimeout(() => {
-      // Reconcile against the real cookie after hydration (it may have
-      // expired, or a session may have started in another tab).
+      // Recheck the cookie after hydration — it may have expired or a session
+      // may have started in another tab.
       setIsAuthenticated(hasMarkerCookie());
       setLoading(false);
     }, 0);

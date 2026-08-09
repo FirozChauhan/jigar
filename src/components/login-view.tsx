@@ -1,5 +1,6 @@
 "use client";
 
+// Full-screen login gate shown until the auth marker cookie is present.
 import { useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
 import { GlowBlobs } from "./glow-blobs";

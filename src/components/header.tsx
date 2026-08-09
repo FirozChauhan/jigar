@@ -1,5 +1,6 @@
 "use client";
 
+// Sticky app header: brand + version tag, live search box, add-song + logout.
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -16,8 +17,8 @@ export function Header() {
   const [draft, setDraft] = useState("");
   const timer = useRef<number | null>(null);
 
-  /* Sync the input when a navigation lands on /search with a fresh query
-     (e.g. clicking an artist chip updates the results URL). */
+  /* Keep the search box in sync when landing on /search with a query,
+     e.g. when clicking an artist chip navigates here. */
   useEffect(() => {
     if (pathname !== "/search") return;
     const id = window.setTimeout(() => {

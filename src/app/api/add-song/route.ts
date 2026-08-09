@@ -1,3 +1,4 @@
+// Adds a track to the library. Auth-required; media URLs come from /api/upload.
 import { NextResponse } from "next/server";
 import { insertSong } from "@/lib/db";
 import { isAuthenticated } from "@/lib/session";

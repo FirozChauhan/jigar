@@ -1,3 +1,5 @@
+// Receives a raw file (MP3 or image) and stores it in the R2 bucket under
+// Audio/ or Thumbs/, returning the public URL. Auth-required.
 import { NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/session";
 import { uploadToR2 } from "@/lib/r2";

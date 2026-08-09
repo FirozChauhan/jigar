@@ -1,5 +1,6 @@
 "use client";
 
+// Home grid of playlists, driven by the TTL-cached playlists API.
 import Link from "next/link";
 import { useAuth } from "@/providers/auth-provider";
 import { useBackendData } from "@/lib/use-backend-data";

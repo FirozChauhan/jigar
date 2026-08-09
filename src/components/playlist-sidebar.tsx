@@ -1,5 +1,6 @@
 "use client";
 
+// Left-side playlist nav used inside the playlist view.
 import Link from "next/link";
 import { useAuth } from "@/providers/auth-provider";
 import { useBackendData } from "@/lib/use-backend-data";

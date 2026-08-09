@@ -2,17 +2,15 @@ import "server-only";
 import { cookies } from "next/headers";
 import { verifyUser } from "@/lib/db";
 
-/** Returns the Base64 Basic-auth token stored in the session cookie, or null. */
+/** Returns the base64 login token stored in the session cookie, or null. */
 export async function sessionToken(): Promise<string | null> {
   const jar = await cookies();
   return jar.get("jigar_token")?.value ?? null;
 }
 
-/**
- * Re-verifies the session cookie against the `users` table. Merely having a
- * `jigar_token` cookie is never enough — the bundled username/password must
- * still authenticate, so dumped or hand-crafted cookies are rejected.
- */
+// Re-verifies the session cookie against the users table. Just having a
+// jigar_token cookie isn't enough — the bundled username/password must still
+// authenticate, so forged or leaked cookies are rejected.
 export async function isAuthenticated(): Promise<boolean> {
   const token = await sessionToken();
   if (!token) return false;

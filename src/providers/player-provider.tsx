@@ -1,5 +1,7 @@
 "use client";
 
+// Player context: owns the <audio> element, queue, and all transport
+// (play/pause/seek/next/prev/shuffle/repeat) plus Media Session + hotkeys.
 import {
   createContext,
   useCallback,
@@ -70,7 +72,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     return index >= 0 && index < queue.length ? queue[index] : null;
   }, [queue, index]);
 
-  /** The track most likely to play next, preloaded for instant switching. */
+  /** The track most likely to play next; preloaded for instant switching. */
   const nextTrack = useMemo<Track | null>(() => {
     if (queue.length < 2 || index < 0) return null;
     if (shuffle) return null; // unpredictable — don't waste bandwidth
@@ -324,7 +326,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   return (
     <PlayerContext.Provider value={value}>
       {children}
-      {/* Warm up the next track while this one plays — switching is instant. */}
+      {/* Warm up the next track while the current one plays */}
       {isPlaying && nextTrack && (
         <audio
           preload="auto"

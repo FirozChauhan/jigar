@@ -1,3 +1,4 @@
+// Root layout: fonts, metadata, and the Providers/Shell wrapper.
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
 import {

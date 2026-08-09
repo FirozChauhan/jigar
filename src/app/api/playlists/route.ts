@@ -1,3 +1,4 @@
+// Playlist summaries computed from track tags. Auth-required, no shared caching.
 import { NextResponse } from "next/server";
 import { listPlaylists } from "@/lib/db";
 import { isAuthenticated } from "@/lib/session";

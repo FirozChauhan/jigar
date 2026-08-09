@@ -1,5 +1,7 @@
 "use client";
 
+// "Add song" dialog. Two steps: pick an MP3 + thumbnail and upload them to
+// Cloudflare (R2), then fill in the metadata and save to the library.
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { clearCache } from "@/lib/cache";
@@ -183,7 +185,7 @@ export function AddSongDialog() {
         setCoverUrl(cover);
         setPhase("meta");
       } catch (err) {
-        // Cover failed — keep the audio URL but report the error.
+        // Rethrow so the files phase stays put with the error shown.
         throw err;
       }
     } catch (err) {
@@ -239,9 +241,8 @@ export function AddSongDialog() {
     </button>
   );
 
-  /* Rendered through a portal so the fixed overlay positions against the
-     viewport — the sticky, backdrop-blurred header otherwise becomes the
-     containing block and traps `position: fixed` inside the header. */
+  /* Rendered through a portal so the overlay positions against the viewport;
+     the sticky header would otherwise trap position:fixed. */
   const dialog = open
     ? createPortal(
         <div

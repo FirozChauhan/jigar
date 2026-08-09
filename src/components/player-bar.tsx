@@ -1,5 +1,6 @@
 "use client";
 
+// Fixed bottom player: now-playing info, transport controls, progress bar.
 import { usePlayer } from "@/providers/player-provider";
 import {
   NextIcon,

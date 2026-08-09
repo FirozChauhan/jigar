@@ -1,3 +1,5 @@
+// Shared types for the fanaa tracks table, playlists and the auth session.
+
 export interface Track {
   id: string;
   title: string;

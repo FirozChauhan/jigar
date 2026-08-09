@@ -1,3 +1,6 @@
+// Tiny TTL cache on top of localStorage for playlist/track responses so the
+// UI renders instantly on revisits.
+
 const FIVE_MINUTES = 5 * 60 * 1000;
 
 export function readCache<T>(key: string, maxAge = FIVE_MINUTES): T | null {

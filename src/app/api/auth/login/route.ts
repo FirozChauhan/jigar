@@ -1,3 +1,5 @@
+// Login: verifies credentials, sets the session cookie, and throttles
+// failed attempts per IP+username.
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { verifyUser } from "@/lib/db";

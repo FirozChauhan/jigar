@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { NextConfig } from "next";
 
+// Version resolution: prefer the latest git tag; fall back to package.json
+// when a checkout has no tags (e.g. shallow CI clones).
 function packageVersion(): string {
   try {
     const pkg = JSON.parse(

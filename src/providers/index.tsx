@@ -1,5 +1,6 @@
 "use client";
 
+// Top-level provider composition: auth first, then the player.
 import { AuthProvider } from "./auth-provider";
 import { PlayerProvider } from "./player-provider";
 

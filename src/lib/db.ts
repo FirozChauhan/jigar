@@ -1,4 +1,6 @@
 import "server-only";
+// Postgres pool + query helpers. Tracks live in the `fanaa` table, auth
+// credentials in `users`. Playlists are just comma-separated tags on a track.
 import { Pool, type QueryResultRow } from "pg";
 import { scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";

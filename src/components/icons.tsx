@@ -1,3 +1,5 @@
+// Inline SVG icons used across the UI.
+
 interface IconProps {
   className?: string;
 }

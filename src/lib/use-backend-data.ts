@@ -1,5 +1,9 @@
 "use client";
 
+// Data-fetching hook used by every list view: reads the TTL cache first,
+// then hits the API. Handles aborting stale requests and signs the user out
+// on a 401.
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readCache, writeCache } from "./cache";
 

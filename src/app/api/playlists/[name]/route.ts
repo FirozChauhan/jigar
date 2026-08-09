@@ -1,3 +1,4 @@
+// Tracks for one playlist. Auth-required, no shared caching.
 import { NextResponse } from "next/server";
 import { listPlaylist } from "@/lib/db";
 import { isAuthenticated } from "@/lib/session";

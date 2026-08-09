@@ -1,3 +1,4 @@
+// Search tracks by title/artist. Auth-required.
 import { NextResponse } from "next/server";
 import { searchSongs } from "@/lib/db";
 import { isAuthenticated } from "@/lib/session";

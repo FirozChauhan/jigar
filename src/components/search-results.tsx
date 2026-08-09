@@ -1,5 +1,6 @@
 "use client";
 
+// Debounced search over title/artist with a loading skeleton + empty state.
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/providers/auth-provider";

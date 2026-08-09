@@ -1,3 +1,5 @@
+// Small presentational bits: spinners, skeletons and the empty state.
+
 export function Spinner({ className = "size-4" }: { className?: string }) {
   return (
     <span

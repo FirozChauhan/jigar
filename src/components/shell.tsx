@@ -1,5 +1,7 @@
 "use client";
 
+// App shell: decides between the login screen, the fixed-height app layout
+// (home + playlists) and the scrolling layout (search).
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { usePlayer } from "@/providers/player-provider";
