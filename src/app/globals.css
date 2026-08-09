@@ -1,0 +1,443 @@
+@import "tailwindcss";
+
+/*
+ * JIGAR — design system
+ * Everything in this file is re-skinable in one place via @theme tokens.
+ * Sharp geometry (radius 0), monospace-labeled, faint-textured, hairline-bordered.
+ */
+@theme {
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
+  --font-ruqaa: var(--font-ruqaa), "Aref Ruqaa Ink", serif;
+  --font-reem: var(--font-reem), "Reem Kufi", ui-sans-serif, sans-serif;
+
+  /* Palette */
+  --color-page: #0a0a0a; /* page ground */
+  --color-card: #131313; /* cards, panels, inputs, headers */
+  --color-card2: #1d1d1d; /* hovered cards, buttons, dropdowns */
+  --color-line: #d9d9d9; /* primary hairline + secondary foreground */
+  --color-line2: #1f1f1f; /* softer hairline */
+  --color-fg: #f5f5f5; /* primary text */
+  --color-fg2: #e6e6e6; /* accents near-white */
+  --color-muted: #9c9c9c; /* secondary text */
+  --color-tert: #cccccc; /* tertiary */
+  --color-faint: #616873; /* faint */
+  --color-danger: #ef4444; /* errors only */
+
+  /* Shape — sharp everywhere */
+  --radius: 0px;
+
+  /* Entrance — panels only, no motion on blocks */
+  --animate-fade-in: fade-in 0.3s ease-out backwards;
+  --animate-fade-up: fade-up 0.3s ease-out backwards;
+
+  /* Motion */
+  --ease-nice: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) var(--color-card);
+  }
+
+  body {
+    background-color: var(--color-page);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 18px 18px;
+  }
+
+  ::selection {
+    background-color: var(--color-line);
+    color: var(--color-page);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role="button"],
+  a {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--color-card);
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    accent-color: var(--color-line);
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--color-line2);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -4px;
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-line);
+  }
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    background: var(--color-line2);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility dot-grid {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+}
+
+@utility board-grid {
+  background-image: linear-gradient(
+      1deg,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility diagonal-grid {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+}
+
+@utility glow-blob {
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 255, 255, 0.06),
+    transparent 72%
+  );
+}
+
+@layer components {
+  /* Sharp card — border-line, hover flips to card2 */
+  .card {
+    border: 1px solid var(--color-line);
+    background-color: var(--color-card);
+    transition: background-color 200ms ease;
+  }
+  .card:hover {
+    background-color: var(--color-card2);
+  }
+
+  .card-subtle {
+    border: 1px solid var(--color-line2);
+    background-color: var(--color-card);
+    transition: background-color 200ms ease;
+  }
+  .card-subtle:hover {
+    background-color: var(--color-card2);
+  }
+
+  /* Mono micro-label: keys, tags, timestamps, versions */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--color-line);
+    padding: 2px 8px;
+    background-color: var(--color-page);
+    color: var(--color-muted);
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
+  }
+
+  .btn-primary {
+    background-color: var(--color-fg);
+    color: var(--color-page);
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: background-color 200ms ease;
+  }
+  .btn-primary:hover {
+    background-color: var(--color-tert);
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--color-line);
+    background-color: var(--color-card);
+    color: var(--color-fg);
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: background-color 200ms ease;
+  }
+  .btn-secondary:hover {
+    background-color: var(--color-card2);
+  }
+  .btn-secondary:active {
+    transform: translateY(1px);
+  }
+
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-line);
+    color: var(--color-fg);
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
+  .btn-icon:hover {
+    border-color: var(--color-fg);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .field {
+    width: 100%;
+    background-color: var(--color-page);
+    border: 1px solid var(--color-line);
+    padding: 8px 12px;
+    color: var(--color-fg);
+  }
+  .field::placeholder {
+    color: rgba(156, 156, 156, 0.5);
+  }
+  .field:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+  .field::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* iOS auto-zooms into inputs with font-size < 16px; keep fields at 16px
+     on phones, let them breathe at text-sm+ on larger screens. */
+  @media (max-width: 640px) {
+    .field {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Aref Ruqaa is a COLR font that ignores `color`. Force flat ink via
+     transparent text + a white gradient background clipped to glyphs. */
+  .signature-ink {
+    background-image: linear-gradient(180deg, #ffffff, #c9c9c9);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .panel {
+    animation: var(--animate-fade-up);
+  }
+
+  /* Hide scrollbars for scrollable content (sidebar, track list) */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Slider: Spotify-style progress with a filled portion, square thumb */
+  .slider {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 6px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .slider:focus {
+    outline: none;
+  }
+  .slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 0;
+    background: linear-gradient(
+      to right,
+      var(--color-fg) var(--progress, 0%),
+      var(--color-line2) var(--progress, 0%)
+    );
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -1px;
+    height: 8px;
+    width: 8px;
+    border-radius: 0;
+    background: var(--color-fg);
+  }
+  .slider::-moz-range-track {
+    height: 6px;
+    border-radius: 0;
+    background: var(--color-line2);
+  }
+  .slider::-moz-range-progress {
+    height: 6px;
+    border-radius: 0;
+    background: var(--color-fg);
+  }
+  .slider::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
+    height: 8px;
+    width: 8px;
+    background: var(--color-fg);
+  }
+
+  /* Route content fade — smooths page swaps (no harsh instant jumps) */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-rise {
+    animation: rise 220ms ease-out both;
+  }
+
+  /* Loading dots — three pulsing dots for any waiting state */
+  @keyframes dot-bounce {
+    0%,
+    80%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+  .loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .loading-dots > span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: currentColor;
+    animation: dot-bounce 1s infinite ease-in-out;
+  }
+  .loading-dots > span:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+  .loading-dots > span:nth-child(3) {
+    animation-delay: 0.24s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-rise,
+    .panel,
+    .loading-dots > span,
+    .animate-pulse {
+      animation: none;
+    }
+  }
+}
