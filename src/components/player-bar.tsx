@@ -10,6 +10,7 @@ import {
   ShuffleIcon,
 } from "./icons";
 import { LoadingDots, Spinner } from "./ui-state";
+import { cdnUrl } from "@/lib/version";
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
@@ -88,7 +89,7 @@ export function PlayerBar() {
           <div className="relative size-14 shrink-0 overflow-hidden border border-line bg-card">
             {song && song.cover && (
               <img
-                src={song.cover}
+                src={cdnUrl(song.cover)}
                 alt=""
                 width={56}
                 height={56}

@@ -11,6 +11,7 @@
     "db:seed": "node scripts/seed-user.cjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1106.0",
     "next": "^16.3.0",
     "pg": "^8.23.0",
     "react": "^19.2.8",

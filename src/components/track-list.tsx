@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { usePlayer } from "@/providers/player-provider";
 import type { Track } from "@/lib/types";
 import { MusicIcon, PlayIcon } from "./icons";
+import { cdnUrl } from "@/lib/version";
 
 function capitalize(name: string): string {
   return name
@@ -70,7 +71,7 @@ export function TrackList({ tracks }: { tracks: Track[] }) {
               <div className="relative size-16 shrink-0 overflow-hidden border border-line2 bg-card2">
                 {track.cover ? (
                   <img
-                    src={track.cover}
+                    src={cdnUrl(track.cover)}
                     alt=""
                     width={64}
                     height={64}

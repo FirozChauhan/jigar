@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import type { Track } from "@/lib/types";
+import { cdnUrl } from "@/lib/version";
 
 interface PlayerContextValue {
   song: Track | null;
@@ -68,6 +69,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const song = useMemo<Track | null>(() => {
     return index >= 0 && index < queue.length ? queue[index] : null;
   }, [queue, index]);
+
+  /** The track most likely to play next, preloaded for instant switching. */
+  const nextTrack = useMemo<Track | null>(() => {
+    if (queue.length < 2 || index < 0) return null;
+    if (shuffle) return null; // unpredictable — don't waste bandwidth
+    return queue[(index + 1) % queue.length];
+  }, [queue, index, shuffle]);
 
   /* Restore persisted volume once on mount. */
   useEffect(() => {
@@ -161,7 +169,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   /* Drive playback whenever the selected song changes. */
   const activeId = song?.id ?? null;
-  const activeUrl = song?.url ?? null;
+  const activeUrl = song ? cdnUrl(song.url) : null;
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !activeId) return;
@@ -210,7 +218,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
           artist: song.artist,
           album: song.playlist.toUpperCase(),
           artwork: song.cover
-            ? [{ src: song.cover, sizes: "256x256", type: "image/jpeg" }]
+            ? [{ src: cdnUrl(song.cover), sizes: "256x256", type: "image/jpeg" }]
             : [],
         });
       }
@@ -316,9 +324,18 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   return (
     <PlayerContext.Provider value={value}>
       {children}
+      {/* Warm up the next track while this one plays — switching is instant. */}
+      {isPlaying && nextTrack && (
+        <audio
+          preload="auto"
+          src={cdnUrl(nextTrack.url)}
+          className="hidden"
+          aria-hidden="true"
+        />
+      )}
       <audio
         ref={audioRef}
-        preload={song ? "auto" : "none"}
+        preload="metadata"
         loop={repeat}
         className="hidden"
         onPlay={() => setIsPlaying(true)}

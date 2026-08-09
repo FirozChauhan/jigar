@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
-import { APP_NAME } from "@/lib/version";
 import { GlowBlobs } from "./glow-blobs";
 import { Spinner } from "./ui-state";
 
@@ -31,12 +30,13 @@ export function LoginView() {
 
       <div className="panel relative w-full max-w-sm border border-line bg-card p-10">
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <img src="/logo.png" alt="" width={72} height={72} className="size-16 object-contain" />
-          <div className="flex items-baseline gap-2.5">
-            <span className="font-mono text-lg font-extrabold tracking-[0.2em] text-fg">
-              {APP_NAME}
-            </span>
-          </div>
+          <span
+            lang="ur"
+            dir="rtl"
+            className="font-reem text-5xl leading-none font-bold tracking-tight text-fg"
+          >
+            جگر
+          </span>
           <p lang="ur" dir="rtl" className="font-reem text-sm text-muted">
             دل پھر بھی میرا دل ہے دل ہی تو زمانا ہے
           </p>
