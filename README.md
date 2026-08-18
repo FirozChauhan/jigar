@@ -109,9 +109,6 @@ next.config.ts              Security headers, prod-only CSP, git-tag version
 ```
 
 ---
-زندگی بھی کہیں ملتی ہے فنا سے پہلے — life, too, is found somewhere before the music fades.
-
----
 
 <div align="left">
   <font face="Aref Ruqaa" size="5">فیروز خان چوہان</font>
